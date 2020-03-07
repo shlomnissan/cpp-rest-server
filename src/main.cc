@@ -1,3 +1,8 @@
+/*
+ * Created on Sat Mar 07 2020 by Shlomi Nissan
+ * Copyright (c) 2020 Betamark
+ */
+
 #include <iostream>
 #include <string>
 

@@ -1,0 +1,21 @@
+{
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
+    "files.associations": {
+        "iostream": "cpp",
+        "condition_variable": "cpp"
+    },
+    "fileHeaderComment.parameter":{
+        "*":{
+            "company": "Betamark",
+            "name": "Shlomi Nissan"
+        }
+    },
+    "fileHeaderComment.template":{
+        "*":[
+            "${commentbegin}",
+            "${commentprefix} Created on ${date} by ${name}",
+            "${commentprefix} Copyright (c) ${year} ${company}",
+            "${commentend}"
+        ]
+    }
+}
