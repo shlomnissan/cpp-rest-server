@@ -5,7 +5,7 @@ project(cpp_rest_server)
 set(CMAKE_CXX_STANDARD 17)
 
 # Set standard library to libc++
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 # cpprestsdk
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/cpprestsdk/CMakeLists.txt)

@@ -36,10 +36,6 @@ RUN apt-get install -y libboost-atomic-dev libboost-thread-dev libboost-system-d
     libboost-random-dev libboost-chrono-dev libboost-serialization-dev \
     libwebsocketpp-dev openssl libssl-dev ninja-build zlib1g-dev
 
-# Install LLVM/Clang
-RUN bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" \
-    && apt-get -y install libc++-9-dev libc++abi-9-dev
-
 # Clean up
 RUN apt-get autoremove -y \
     && apt-get clean -y \
