@@ -13,6 +13,20 @@ matrix:
             - clang-9
             - libc++-9-dev
             - libc++abi-9-dev
+            - libboost-atomic-dev
+            - libboost-thread-dev
+            - libboost-system-dev
+            - libboost-date-time-dev
+            - libboost-regex-dev
+            - libboost-filesystem-dev
+            - libboost-random-dev
+            - libboost-chrono-dev
+            - libboost-serialization-dev
+            - libwebsocketpp-dev
+            - openssl
+            - libssl-dev
+            - ninja-build
+            - zlib1g-dev
       env:
         - MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
         - LINKER_FLAGS=""
