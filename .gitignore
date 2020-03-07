@@ -41,7 +41,6 @@ _deps
 
 # Folders
 
-external
 .vscode
 build
 .idea
