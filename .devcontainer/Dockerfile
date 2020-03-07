@@ -1,0 +1,49 @@
+FROM debian:10.3-slim
+
+# Avoid warnings by switching to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
+
+# This Dockerfile adds a non-root user with sudo access. Use the "remoteUser"
+# property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
+# will be updated to match your local UID/GID (when using the dockerFile property).
+# See https://aka.ms/vscode-remote/containers/non-root-user for details.
+ARG USERNAME=dev
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Configure apt and install packages
+RUN apt-get update \
+    && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
+    # 
+    # Verify git, process tools, lsb-release (useful for CLI installs) installed
+    && apt-get -y install git iproute2 procps lsb-release \
+    #
+    # Install C++ tools
+    && apt-get -y install build-essential cmake cppcheck valgrind curl wget software-properties-common \
+    #
+    # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
+    && groupadd --gid $USER_GID $USERNAME \
+    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    #
+    # [Optional] Add sudo support for the non-root user
+    && apt-get install -y sudo \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# Install cpprestsdk dependencies
+RUN apt-get install -y libboost-atomic-dev libboost-thread-dev libboost-system-dev \
+    libboost-date-time-dev libboost-regex-dev libboost-filesystem-dev \
+    libboost-random-dev libboost-chrono-dev libboost-serialization-dev \
+    libwebsocketpp-dev openssl libssl-dev ninja-build zlib1g-dev
+
+# Install LLVM/Clang
+RUN bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" \
+    && apt-get -y install libc++-9-dev libc++abi-9-dev
+
+# Clean up
+RUN apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
+
+# Switch back to dialog for any ad-hoc use of apt-get
+ENV DEBIAN_FRONTEND=dialog
