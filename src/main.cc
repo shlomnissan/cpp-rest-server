@@ -44,11 +44,13 @@ int main(int argc, char* argv[]) {
     listener.open().wait();
     std::cout << "Listening for HTTP requests at " << host << '\n';
 
+    // handle GET request
     listener.support(http::methods::GET,
         [](const http::http_request& request){
         SendResponse(http::status_codes::OK, request, "Success", false);
     });
 
+    // handle POST request
     listener.support(http::methods::POST,
         [](const http::http_request& request) {
         request.extract_json().then([&request](json::value data){
