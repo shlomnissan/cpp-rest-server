@@ -7,10 +7,12 @@
 #include <string>
 
 #include <cpprest/http_listener.h>
+#include <cpprest/json.h>
 
 #include "common/user_interrupt.h"
 #include "gflags/gflags.h"
 
+using namespace web;
 using namespace web::http::experimental::listener;
 
 DEFINE_string(port, "8080", "server port");
@@ -30,6 +32,13 @@ int main(int argc, char* argv[]) {
     // start http server
     listener.open().wait();
     std::cout << "Listening for HTTP requests at " << host << '\n';
+
+    listener.support(http::methods::GET, [](const http::http_request request){
+        auto response = json::value::object();
+        response["error"] = json::value::boolean(false);
+        response["message"] = json::value::string("Success");
+        request.reply(http::status_codes::OK, response);
+    });
     
     // wait for user interrupt
     UserInterrupt::Wait();
