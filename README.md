@@ -1,1 +1,1 @@
-# C++ REST [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.com/shlomnissan/cpprest.svg?token=GH5sGKmy5qUge3L2ogfM&branch=master)](https://travis-ci.com/shlomnissan/cpprest)
+# C++ REST Server [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.com/shlomnissan/cpprest.svg?token=GH5sGKmy5qUge3L2ogfM&branch=master)](https://travis-ci.com/shlomnissan/cpprest)
