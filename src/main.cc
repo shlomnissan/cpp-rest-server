@@ -19,6 +19,16 @@ using namespace web::json;
 DEFINE_string(port, "8080", "server port");
 DEFINE_string(host, "http://localhost", "server address");
 
+void SendResponse(unsigned status_code,
+                  const http::http_request& request,
+                  const std::string& message,
+                  bool error) {
+    auto response = json::value::object();
+    response["error"] = json::value::boolean(error);
+    response["message"] = json::value::string(message);
+    request.reply(status_code, response);
+}
+
 int main(int argc, char* argv[]) {
     gflags::SetUsageMessage("rest -port <PORT> -host <HOST>");
     gflags::SetVersionString("1.0.0");
@@ -34,11 +44,26 @@ int main(int argc, char* argv[]) {
     listener.open().wait();
     std::cout << "Listening for HTTP requests at " << host << '\n';
 
-    listener.support(http::methods::GET, [](const http::http_request request){
-        auto response = json::value::object();
-        response["error"] = json::value::boolean(false);
-        response["message"] = json::value::string("Success");
-        request.reply(http::status_codes::OK, response);
+    listener.support(http::methods::GET,
+        [](const http::http_request& request){
+        SendResponse(http::status_codes::OK, request, "Success", false);
+    });
+
+    listener.support(http::methods::POST,
+        [](const http::http_request& request) {
+        request.extract_json().then([&request](json::value data){
+            try {
+                auto key = data.at("key").as_string();
+                auto value = data.at("value").as_string();
+                std::cout << "Key: " << key << " "
+                          << "Value: " << value << '\n';
+                SendResponse(http::status_codes::OK,
+                             request, "Success", false);
+            } catch(const json::json_exception& e) {
+                SendResponse(http::status_codes::BadRequest,
+                             request, "Failure", true);
+            }
+        }).wait();
     });
 
     // wait for user interrupt

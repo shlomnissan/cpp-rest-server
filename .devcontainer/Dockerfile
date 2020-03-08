@@ -32,7 +32,6 @@ RUN apt-get update \
 
 # Install cpplint
 RUN ./usr/bin/pip3 install cpplint
-RUN cp ./home/dev/.local/bin/cpplint /usr/local/bin/cpplint
 
 # Install cpprestsdk dependencies
 RUN apt-get install -y libboost-atomic-dev libboost-thread-dev libboost-system-dev \
