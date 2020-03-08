@@ -16,7 +16,7 @@ RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
     # 
     # Verify git, process tools, lsb-release (useful for CLI installs) installed
-    && apt-get -y install git iproute2 procps lsb-release \
+    && apt-get -y install git iproute2 procps lsb-release python3-venv python3-pip \
     #
     # Install C++ tools
     && apt-get -y install build-essential cmake cppcheck valgrind curl wget software-properties-common \
@@ -29,6 +29,10 @@ RUN apt-get update \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
     && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# Install cpplint
+RUN ./usr/bin/pip3 install cpplint
+RUN cp ./home/dev/.local/bin/cpplint /usr/local/bin/cpplint
 
 # Install cpprestsdk dependencies
 RUN apt-get install -y libboost-atomic-dev libboost-thread-dev libboost-system-dev \

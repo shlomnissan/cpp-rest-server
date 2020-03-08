@@ -3,17 +3,18 @@
  * Copyright (c) 2020 Betamark
  */
 
-#include <iostream>
-#include <string>
-
 #include <cpprest/http_listener.h>
 #include <cpprest/json.h>
+
+#include <iostream>
+#include <string>
 
 #include "common/user_interrupt.h"
 #include "gflags/gflags.h"
 
 using namespace web;
 using namespace web::http::experimental::listener;
+using namespace web::json;
 
 DEFINE_string(port, "8080", "server port");
 DEFINE_string(host, "http://localhost", "server address");
@@ -39,10 +40,10 @@ int main(int argc, char* argv[]) {
         response["message"] = json::value::string("Success");
         request.reply(http::status_codes::OK, response);
     });
-    
+
     // wait for user interrupt
     UserInterrupt::Wait();
-    
+
     // shutdown http server
     listener.close().wait();
 

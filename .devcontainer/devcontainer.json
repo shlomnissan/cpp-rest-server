@@ -24,6 +24,7 @@
 		"ms-vscode.cpptools",
 		"ms-vscode.cmake-tools",
 		"twxs.cmake",
+		"mine.cpplint",
 		"doi.fileheadercomment"
 	]
 }
