@@ -18,10 +18,14 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/gflags/CMakeLists.txt)
 endif ()
 
 # Header files list
-set(HEADER "src/common/user_interrupt.h")
+set(HEADER "src/common/user_interrupt.h"
+           "src/common/server.h"
+           "src/common/router.h")
 
 # Source files list
-set(SOURCE "src/main.cc")
+set(SOURCE "src/main.cc"
+           "src/common/server.cc"
+           "src/common/router.cc")
 
 add_executable(${CMAKE_PROJECT_NAME} ${HEADER} ${SOURCE})
 

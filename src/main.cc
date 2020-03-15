@@ -8,26 +8,17 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 
-#include "common/user_interrupt.h"
 #include "gflags/gflags.h"
-
-using namespace web;
-using namespace web::http::experimental::listener;
-using namespace web::json;
+#include "common/user_interrupt.h"
+#include "common/server.h"
+#include "common/router.h"
 
 DEFINE_string(port, "8080", "server port");
 DEFINE_string(host, "http://localhost", "server address");
 
-void SendResponse(unsigned status_code,
-                  const http::http_request& request,
-                  const std::string& message,
-                  bool error) {
-    auto response = json::value::object();
-    response["error"] = json::value::boolean(error);
-    response["message"] = json::value::string(message);
-    request.reply(status_code, response);
-}
+using std::make_unique;
 
 int main(int argc, char* argv[]) {
     gflags::SetUsageMessage("rest -port <PORT> -host <HOST>");
@@ -37,42 +28,15 @@ int main(int argc, char* argv[]) {
     UserInterrupt::Register();
 
     std::string host = FLAGS_host + ":" + FLAGS_port;
+    auto server = make_unique<Server>(host);
 
-    auto listener = http_listener(host);
+    Router router(server);
 
-    // start http server
-    listener.open().wait();
-    std::cout << "Listening for HTTP requests at " << host << '\n';
-
-    // handle GET request
-    listener.support(http::methods::GET,
-        [](const http::http_request& request){
-        SendResponse(http::status_codes::OK, request, "Success", false);
-    });
-
-    // handle POST request
-    listener.support(http::methods::POST,
-        [](const http::http_request& request) {
-        request.extract_json().then([&request](json::value data){
-            try {
-                auto key = data.at("key").as_string();
-                auto value = data.at("value").as_string();
-                std::cout << "Key: " << key << " "
-                          << "Value: " << value << '\n';
-                SendResponse(http::status_codes::OK,
-                             request, "Success", false);
-            } catch(const json::json_exception& e) {
-                SendResponse(http::status_codes::BadRequest,
-                             request, "Failure", true);
-            }
-        }).wait();
-    });
-
-    // wait for user interrupt
+    // Start server and wait for requests
+    server->Start().wait();
     UserInterrupt::Wait();
 
-    // shutdown http server
-    listener.close().wait();
-
+    // Shutdown server and clean up
+    server->Shutdown();
     return 0;
 }
